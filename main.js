@@ -14,7 +14,7 @@ const showNewsDisplay = (newsArr) => {
   newsContainer.innerHTML = newsArr
     .map((newsItem) => {
       return `
-             <div class="news-card cursor-pointer group">
+             <div class="news-card cursor-pointer group" onclick="loadNewsDetails('${newsItem.id}')">
           <img
             src="${newsItem.image.srcset[7].url}"
             alt=""
@@ -93,6 +93,53 @@ const loadNewsCategory = async () => {
   let response = await fetch(catagoryUrl);
   let data = await response.json();
   showCategoryDisplay(data.categories);
+};
+
+// Show deatails news in a modal when user click a news
+
+let dialog = document.querySelector("dialog");
+
+const showNewsDetails = (articles) => {
+  dialog.innerHTML = `
+      <div class="modal-box thick-scrollbar">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+
+        <div class="mt-4"> 
+          <img class="rounded-md" src="${articles.images[0].url}" />
+          <span class="text-sm mb-3 mt-2 text-gray-600">${
+            articles.timestamp
+          } <span/>
+          <p class="text-gray-800"> ${articles.content.join(" ")}</p>
+        </div>
+
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      </div>
+  `;
+};
+// when user click out side of the box then close the details of modal
+
+dialog.addEventListener("click", (e) => {
+  let dialogBox = e.target.closest(".modal-box");
+  if (!dialogBox) {
+    document.getElementById("my_modal_5").close();
+  }
+});
+
+const loadNewsDetails = async (id) => {
+  document.getElementById("my_modal_5").showModal();
+  let url = `https://news-api-fs.vercel.app/api/news/${id}`;
+
+  let response = await fetch(url);
+  let data = await response.json();
+
+  showNewsDetails(data.article);
 };
 
 loadNews("main");
