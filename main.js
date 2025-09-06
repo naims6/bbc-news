@@ -1,4 +1,41 @@
+// ****
+// Add bookmark any news and remove
+// ****
+let bookmarkContainer = document.querySelector(".bookmark-container");
+let bookmark = JSON.parse(localStorage.getItem("bookmark")) || [];
+
+const renderBookmark = () => {
+  bookmarkContainer.innerHTML = "";
+  bookmark.forEach((title, index) => {
+    bookmarkContainer.innerHTML += `
+        <div class="bookmark-item relative border border-gray-400 rounded-md overflow-hidden w-full max-w-[300px]">
+          <p class="truncate-2-lines p-4 pr-7 text-gray-700">
+            ${title}
+          </p>
+          <span onclick="removeBookmark(${index})" class="absolute right-3 top-3 cursor-pointer">X</span>
+        </div>
+  `;
+  });
+};
+
+const removeBookmark = (index) => {
+  bookmark.splice(index, 1);
+  renderBookmark();
+  localStorage.setItem("bookmark", JSON.stringify(bookmark));
+};
+
+const addBookmark = (title) => {
+  if (bookmark.includes(title)) {
+    return;
+  }
+  bookmark.push(title);
+  renderBookmark();
+  localStorage.setItem("bookmark", JSON.stringify(bookmark));
+};
+
+// ****
 // show news in a container
+// ****
 let newsContainer = document.querySelector(".news");
 
 const showNewsDisplay = (newsArr) => {
@@ -15,16 +52,21 @@ const showNewsDisplay = (newsArr) => {
   newsContainer.innerHTML = newsArr
     .map((newsItem) => {
       return `
-             <div class="news-card cursor-pointer group" onclick="loadNewsDetails('${newsItem.id}')">
-          <img
-            src="${newsItem.image.srcset[7].url}"
-            alt=""
-          />
-          <p class="leading-9 line-clamp-2 group-hover:underline decoration-gray-600 decoration-2 font-semibold mt-3 text-xl">
-            ${newsItem.title}
-          </p>
-          <span class="text-gray-600 mt-5">${newsItem.time}</span>
-        </div>
+            <div>
+              <div class="news-card cursor-pointer group" onclick="loadNewsDetails('${newsItem.id}')">
+                <img
+                  src="${newsItem.image.srcset[7].url}"
+                  alt=""
+                />
+                <p class="leading-9 line-clamp-2 group-hover:underline decoration-gray-600 decoration-2 font-semibold mt-3 text-xl">
+                  ${newsItem.title}
+                </p>
+                <span class="text-gray-600 mt-5">${newsItem.time}</span> <br>
+                </div>
+
+                <button onclick='addBookmark("${newsItem.title}")' class="btn btn-primary mt-1.5">Bookmark</button>
+            </div>
+            
         `;
     })
     .join(" ");
@@ -162,3 +204,4 @@ const loadingSpinner = (loading, place) => {
 
 loadNews("main");
 loadNewsCategory();
+renderBookmark();

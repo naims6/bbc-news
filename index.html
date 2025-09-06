@@ -44,12 +44,25 @@
         />
       </div>
     </section>
-
+    <!-- nes section -->
     <section id="news-section" class="max-w-7xl mx-auto mt-10 mb-10 px-4">
       <h1 class="news-title text-3xl font-bold mb-7"></h1>
 
-      <div class="news grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
         <!-- news will be show here  -->
+        <div
+          class="order-2 md:order-1 news col-span-1 md:col-span-2 lg:col-span-3 grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+        ></div>
+
+        <div class="col-span-1 md:order-2 bg-gray-200">
+          <div>
+            <h1 class="text-white bg-red-600 p-5">Bookmark</h1>
+          </div>
+
+          <div class="bookmark-container p-3 space-y-3">
+            <!-- here will be add bookmark item from js  -->
+          </div>
+        </div>
       </div>
     </section>
 
