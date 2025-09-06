@@ -3,6 +3,7 @@ let newsContainer = document.querySelector(".news");
 
 const showNewsDisplay = (newsArr) => {
   //   newsContainer.innerHTML = "";
+  loadingSpinner(false);
   if (!newsArr.length) {
     newsContainer.innerHTML = `
                  <div class="bg-red-600 text-white mx-auto p-5 text-3xl col-span-full w-full text-center" >
@@ -52,6 +53,7 @@ const showError = () => {
 };
 
 const loadNews = async (catagoryId) => {
+  loadingSpinner(true, newsContainer);
   try {
     let newsUrl = `https://news-api-fs.vercel.app/api/categories/${catagoryId}`;
     let response = await fetch(newsUrl);
@@ -69,12 +71,14 @@ const loadNews = async (catagoryId) => {
   }
 };
 
+// ****
 // Showing catagory to the navbar
+// ****
 
+let newsCategoryContainer = document.querySelector(".news-catagory-container");
 const showCategoryDisplay = (catagoryName) => {
-  let newsCategoryContainer = document.querySelector(
-    ".news-catagory-container"
-  );
+  loadingSpinner(false);
+  newsCategoryContainer.innerHTML = "";
   catagoryName.forEach((catagory) => {
     newsCategoryContainer.innerHTML += `
         <li 
@@ -89,14 +93,16 @@ const showCategoryDisplay = (catagoryName) => {
 };
 
 const loadNewsCategory = async () => {
+  loadingSpinner(true, newsCategoryContainer);
   let catagoryUrl = "https://news-api-fs.vercel.app/api/categories";
   let response = await fetch(catagoryUrl);
   let data = await response.json();
   showCategoryDisplay(data.categories);
 };
 
+// ****
 // Show deatails news in a modal when user click a news
-
+// ****
 let dialog = document.querySelector("dialog");
 
 const showNewsDetails = (articles) => {
@@ -123,8 +129,8 @@ const showNewsDetails = (articles) => {
       </div>
   `;
 };
-// when user click out side of the box then close the details of modal
 
+// when user click out side of the box then close the details of modal
 dialog.addEventListener("click", (e) => {
   let dialogBox = e.target.closest(".modal-box");
   if (!dialogBox) {
@@ -140,6 +146,18 @@ const loadNewsDetails = async (id) => {
   let data = await response.json();
 
   showNewsDetails(data.article);
+};
+
+// ****
+// Adding loading spinner when data will be loading
+// ****
+const loadingSpinner = (loading, place) => {
+  if (loading) {
+    place.innerHTML = `
+    <div class="col-span-full text-center w-full">
+      <span class="loading loading-bars loading-md"></span>
+    </div>`;
+  }
 };
 
 loadNews("main");
